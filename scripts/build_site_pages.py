@@ -13,13 +13,21 @@ from pathlib import Path
 CONTACT_EMAIL = "submit@builderr.ai"
 
 CSS = (
-    "body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;margin:0 auto;max-width:760px;"
-    "padding:24px 16px;background:#fff;color:#111;line-height:1.6}"
+    "body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;margin:0;background:#eef2f7;color:#0f172a;line-height:1.6}"
+    ".wrap{max-width:780px;margin:0 auto;padding:0 16px 32px}"
+    ".hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#0ea5e9 135%);color:#fff;"
+    "padding:28px 24px;border-bottom:4px solid #f59e0b;box-shadow:0 6px 24px rgba(15,23,42,.35)}"
+    ".hero h1{margin:0;font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;text-shadow:0 3px 0 rgba(0,0,0,.35)}"
+    ".hero p{color:#dbeafe}"
+    ".sheet{background:#fff;border:1px solid #dbe3ef;border-radius:16px;padding:24px;margin-top:-8px;"
+    "box-shadow:0 1px 2px rgba(15,23,42,.12),0 8px 24px rgba(15,23,42,.14)}"
     "a{color:#0b4cb3}a:focus-visible{outline:3px solid #0b4cb3;outline-offset:2px}"
-    "nav ul{list-style:none;padding:0;display:flex;gap:12px;flex-wrap:wrap}"
-    ".notice{background:#f0f0f5;border:1px solid #ddd;border-radius:8px;padding:12px}"
-    "footer{margin-top:32px;border-top:1px solid #ddd;padding-top:16px;font-size:13px;color:#333}"
-    ".skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;background:#fff;padding:8px}"
+    "nav ul{list-style:none;padding:0;display:flex;gap:10px;flex-wrap:wrap}"
+    "nav a{display:inline-block;background:#fff;border:1px solid #dbe3ef;border-radius:999px;"
+    "padding:6px 14px;font-weight:700;text-decoration:none;box-shadow:0 2px 4px rgba(15,23,42,.15)}"
+    ".notice{background:#f1f5f9;border:1px solid #dbe3ef;border-left:6px solid #f59e0b;border-radius:8px;padding:12px}"
+    "footer{margin-top:32px;border-top:1px solid #dbe3ef;padding-top:16px;font-size:13px;color:#475569}"
+    ".skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;background:#fff;padding:8px;font-weight:700}"
 )
 
 SHELL = """<!doctype html><html lang="en"><head><meta charset="utf-8">
@@ -28,11 +36,12 @@ SHELL = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>{title} — Signalpost</title>
 <style>{css}</style></head><body>
 <a class="skip" href="#main">Skip to content</a>
-<nav aria-label="Legal"><ul>
-<li><a href="gallery.html">Gallery</a></li><li><a href="privacy.html">Privacy</a></li>
+<div class="hero"><h1>{title}</h1><p>Signalpost · Brreg-verified company intelligence</p></div>
+<div class="wrap"><nav aria-label="Legal"><ul>
+<li><a href="index.html">Gallery</a></li><li><a href="privacy.html">Privacy</a></li>
 <li><a href="terms.html">Terms</a></li><li><a href="cookies.html">Cookies</a></li>
 <li><a href="refunds.html">Refunds</a></li></ul></nav>
-<main id="main"><h1>{title}</h1><p><strong>Effective date:</strong> {day}</p>{body}</main>
+<main id="main" class="sheet"><p><strong>Effective date:</strong> {day}</p>{body}</main>
 <footer><p>Signalpost — contact <a href="mailto:{mail}">{mail}</a>.
 No cookies, no analytics, no third-party embeds on these pages.</p></footer></body></html>"""
 
