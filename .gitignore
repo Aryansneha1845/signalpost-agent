@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+out/
+brreg-*.csv
+*.jsonl.gz
+signalpost-universe.jsonl.gz
+entry-companies.jsonl
+smoke-companies.jsonl
+.DS_Store
