@@ -39,6 +39,10 @@ def main() -> None:
     parser.add_argument("--checkpoint-every", type=int, default=25)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--modules", default="registry,accounting_obligation,registry_live,financials,roles,group,locations,website")
+    parser.add_argument("--request-budget-per-company", type=int, default=0,
+                        help="Max outbound fetches per company (0 = unlimited). Official modules run first in "
+                             "priority order; website gets the remainder. Over-budget modules become honest "
+                             "'blocked' states, never silent drops.")
     args = parser.parse_args()
 
     started_at = utc_now()
@@ -56,12 +60,16 @@ def main() -> None:
     fetch_modules = set(requested_modules) - {"registry", "accounting_obligation", "website"}
     operations = {"requests": 0, "bytes": 0, "latencies_ms": []}
 
+    per_company = args.request_budget_per_company or None
+
     def enrich(profile: dict) -> tuple[dict, dict]:
-        records, metrics = fetch_official_modules(profile["organisation_number"], fetch_modules)
+        official_budget = per_company
+        records, metrics = fetch_official_modules(profile["organisation_number"], fetch_modules, budget=official_budget)
         profile["evidence"].update(records)
         website_metrics = {"requests": 0, "bytes": 0, "latencies_ms": []}
         if "website" in requested_modules:
-            website_record, website_metrics = fetch_website(profile.get("website"))
+            website_budget = None if per_company is None else max(0, per_company - len(metrics))
+            website_record, website_metrics = fetch_website(profile.get("website"), budget=website_budget)
             profile["evidence"]["website"] = apply_website_identity_gate(profile, website_record)["website"]
         metric = {
             "requests": len(metrics) + website_metrics["requests"],
@@ -118,6 +126,7 @@ def main() -> None:
         "resumed_profiles": resumed_profiles,
         "profiles_fetched_this_run": len(pending_profiles),
         "modules": requested_modules,
+        "request_budget_per_company": args.request_budget_per_company,
         "registry": registry_metadata,
         "operations": operations,
         "validation": validation,

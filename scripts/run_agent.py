@@ -46,6 +46,9 @@ def main() -> None:
     ap.add_argument("--run-id", default="local-001")
     ap.add_argument("--expected-count", type=lambda v: _positive_int(v, minimum=1, maximum=100000, name="expected-count"), default=5)
     ap.add_argument("--workers", type=lambda v: _positive_int(v, minimum=1, maximum=32, name="workers"), default=8)
+    ap.add_argument("--request-budget-per-company", type=lambda v: _positive_int(v, minimum=0, maximum=1000, name="request-budget-per-company"), default=0,
+                    help="Max outbound fetches per company (0 = unlimited). Official modules first; "
+                         "website gets the remainder. Use 2 for 1000-company official runs under the 2000-request cap.")
     args = ap.parse_args()
 
     if len(args.run_id) > 64 or not all(c.isalnum() or c in "-_." for c in args.run_id):
@@ -66,7 +69,8 @@ def main() -> None:
            "--organisations", args.input, "--bulk", args.bulk,
            "--profiles-output", str(profiles_p), "--output", str(envelopes_p),
            "--report", str(report_p), "--run-id", args.run_id,
-           "--expected-count", str(args.expected_count), "--workers", str(args.workers)]
+           "--expected-count", str(args.expected_count), "--workers", str(args.workers),
+           "--request-budget-per-company", str(args.request_budget_per_company)]
     print("+ " + " ".join(cmd), flush=True)
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=2700)
     print(proc.stdout[-3000:])

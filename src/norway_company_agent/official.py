@@ -174,6 +174,12 @@ def normalize_entity(body: Any) -> dict[str, Any]:
     }
 
 
+MODULE_PRIORITY = (
+    "registry_live", "financials", "roles", "locations", "group", "financial_history",
+)
+"""Fetch order under a request budget: identity, money, people, places first."""
+
+
 def _classified(field: str, source_type: str, result: FetchResult, value: Any = None) -> dict[str, Any]:
     if result.status == 200:
         return evidence(field, "available", source_type, result.url, value=result.body if value is None else value, content_sha256=result.content_sha256, retrieved_at=result.retrieved_at, effective_at=result.effective_at)
@@ -182,7 +188,20 @@ def _classified(field: str, source_type: str, result: FetchResult, value: Any = 
     return evidence(field, "source_error", source_type, result.url, note=result.error, content_sha256=result.content_sha256, retrieved_at=result.retrieved_at, effective_at=result.effective_at)
 
 
-def fetch_official_modules(org: str, modules: set[str], fetcher: Callable[[str], FetchResult] = fetch_json) -> tuple[dict[str, Any], list[FetchResult]]:
+def fetch_official_modules(
+    org: str,
+    modules: set[str],
+    fetcher: Callable[[str], FetchResult] = fetch_json,
+    budget: int | None = None,
+) -> tuple[dict[str, Any], list[FetchResult]]:
+    """Fetch official modules in priority order under an optional request cap.
+
+    budget=None (default) preserves legacy behavior: every requested module is
+    fetched. With budget=N, at most N fetches run; the rest are recorded as
+    honest ``blocked`` (budget_exhausted) states — never skipped silently and
+    never zeroed. Counts are fetches, not wire retries; retries make the real
+    total slightly higher, so keep operational caps conservative.
+    """
     records: dict[str, Any] = {}
     metrics: list[FetchResult] = []
     endpoints = {
@@ -193,8 +212,15 @@ def fetch_official_modules(org: str, modules: set[str], fetcher: Callable[[str],
         "group": (BRREG_GROUP.format(org=org), "official_group_structure"),
         "locations": (BRREG_SUBUNITS.format(org=org), "official_subunits"),
     }
-    for module, (url, source_type) in endpoints.items():
-        if module not in modules:
+    ordered = [m for m in MODULE_PRIORITY if m in modules] + [m for m in modules if m not in MODULE_PRIORITY]
+    for module in ordered:
+        url, source_type = endpoints[module]
+        if budget is not None and len(metrics) >= budget:
+            records[module] = evidence(
+                module, "blocked", source_type, url,
+                note="budget_exhausted: per-company request cap reached; lower-priority module deferred honestly.",
+                source_row_key=org,
+            )
             continue
         result = _fetch_history(url) if module in {"financials", "financial_history"} and fetcher is fetch_json else fetcher(url)
         metrics.append(result)

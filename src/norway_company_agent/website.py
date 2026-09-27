@@ -261,12 +261,21 @@ def _extraction_state(text: str, soup: BeautifulSoup) -> str:
     return "js_fallback_candidate" if len(text.strip()) < 100 and len(soup.select("script[src]")) >= 2 else "static_complete"
 
 
-def fetch_website(url: str | None, *, timeout: float = 15.0, max_bytes: int = 2_000_000) -> tuple[dict[str, Any], dict[str, Any]]:
+def fetch_website(url: str | None, *, timeout: float = 15.0, max_bytes: int = 2_000_000, budget: int | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Fetch the registry-linked company site under an optional request cap.
+
+    budget=None preserves legacy behavior (homepage + up to 4 secondary pages).
+    With budget=N, the homepage (2 requests: robots + GET) is skipped entirely
+    when N < 2, and secondary pages stop once the cap would be exceeded —
+    always as honest ``blocked`` (budget_exhausted), never silent.
+    """
     supplied_url = str(url or "").strip()
     supplied_scheme = bool(re.match(r"^https?://", supplied_url, re.I))
     normalized = normalize_homepage(url)
     if not normalized:
         return evidence("website", "not_found", "registry_linked_company_website", "https://data.brreg.no/enhetsregisteret/api/enheter", note="No valid registry website URL"), {"requests": 0, "bytes": 0, "latencies_ms": []}
+    if budget is not None and budget < 2:
+        return evidence("website", "blocked", "registry_linked_company_website", normalized, note="budget_exhausted: per-company request cap leaves no room for the 2-request homepage fetch"), {"requests": 0, "bytes": 0, "latencies_ms": []}
     try:
         assert_public_url(normalized)
     except ValueError as exc:
@@ -313,6 +322,9 @@ def fetch_website(url: str | None, *, timeout: float = 15.0, max_bytes: int = 2_
         page_latencies = [elapsed]
         homepage_domain = value["registered_domain"]
         for page_url in _priority_links(final_url, soup):
+            if budget is not None and requests + 2 > budget:
+                crawl_errors.append({"url": page_url, "error": "budget_exhausted: secondary page deferred honestly"})
+                continue
             page, page_social, page_requests, page_bytes, page_elapsed, page_error = _fetch_secondary_page(
                 page_url,
                 homepage_domain=homepage_domain,
@@ -339,7 +351,8 @@ def fetch_website(url: str | None, *, timeout: float = 15.0, max_bytes: int = 2_
     except urllib.error.URLError as exc:
         if not supplied_scheme and normalized.startswith("https://"):
             first_elapsed = int((time.monotonic() - started) * 1000)
-            record, metrics = fetch_website("http://" + supplied_url, timeout=timeout, max_bytes=max_bytes)
+            remaining = None if budget is None else max(0, budget - 2)
+            record, metrics = fetch_website("http://" + supplied_url, timeout=timeout, max_bytes=max_bytes, budget=remaining)
             metrics["requests"] += 2
             metrics["latencies_ms"].insert(0, first_elapsed)
             return record, metrics

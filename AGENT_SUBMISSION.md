@@ -7,7 +7,7 @@ Baseline: Builderr starter + hiring/synthesis/gallery layers, regnskap throttle+
 ```bash
 pip install -r requirements.txt
 curl -L 'https://data.brreg.no/enhetsregisteret/api/enheter/lastned/csv' -o brreg-enheter.csv.gz
-python scripts/run_agent.py --input <BATCH.jsonl> --bulk brreg-enheter.csv.gz --out out --run-id official --expected-count 1000 --workers 8
+python scripts/run_agent.py --input <BATCH.jsonl> --bulk brreg-enheter.csv.gz --out out --run-id official --expected-count 1000 --workers 8 --request-budget-per-company 2
 ```
 
 - Input: JSON/JSONL/TXT of 9-digit orgnrs (same batch Builderr supplies, any size).

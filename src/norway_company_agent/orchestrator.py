@@ -29,6 +29,7 @@ def research_company(profile: dict[str, Any],
                      *,
                      previous: dict[str, Any] | None = None,
                      website_enabled: bool = True,
+                     budget: int | None = None,
                      on_step: Callable[[dict[str, Any]], None] | None = None) -> dict[str, Any]:
     events: list[dict[str, Any]] = []
 
@@ -45,12 +46,13 @@ def research_company(profile: dict[str, Any],
     _emit("plan", True, f"Research plan: {', '.join(sorted(CORE_MODULES))}"
           + (" + website." if website_enabled else ", website skipped."))
 
-    records, metrics = fetch_official_modules(org, set(CORE_MODULES))
+    records, metrics = fetch_official_modules(org, set(CORE_MODULES), budget=budget)
     profile.setdefault("evidence", {}).update(records)
     got = sum(1 for m in CORE_MODULES if records.get(m, {}).get("status") == "available")
     website_requests = 0
     if website_enabled:
-        wrec, wmet = fetch_website(profile.get("website"))
+        website_budget = None if budget is None else max(0, budget - len(metrics))
+        wrec, wmet = fetch_website(profile.get("website"), budget=website_budget)
         website_requests = int(wmet.get("requests") or 0)
         profile["evidence"]["website"] = apply_website_identity_gate(profile, wrec)["website"]
         _emit("collect", got > 0,
