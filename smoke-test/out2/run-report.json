@@ -1,0 +1,48 @@
+{
+  "run_id": "smoke-5b",
+  "started_at": "2026-09-27T06:52:18.420742Z",
+  "completed_at": "2026-09-27T06:52:48.296231Z",
+  "expected_count": 5,
+  "emitted_envelopes": 5,
+  "resumed_profiles": 0,
+  "profiles_fetched_this_run": 5,
+  "modules": [
+    "registry",
+    "accounting_obligation",
+    "registry_live",
+    "financials",
+    "roles",
+    "group",
+    "locations",
+    "website"
+  ],
+  "registry": {
+    "registry_snapshot_sha256": "0409076caf1bdeacd0fe57083b1cbb4dad7c863983c3a7b0ee6d07f0fed4ac72",
+    "registry_rows_scanned": 5,
+    "requested": 5,
+    "selected": 5
+  },
+  "operations": {
+    "requests": 63,
+    "bytes": 4013192,
+    "p50_ms": 729,
+    "p95_ms": 1663
+  },
+  "validation": {
+    "passed": true,
+    "checks": {
+      "exact_expected_count": true,
+      "unique_organisation_numbers": true,
+      "all_entity_states_terminal": true,
+      "all_module_states_terminal": true,
+      "zero_silent_drops": true
+    },
+    "invalid_states": []
+  },
+  "layers": {
+    "hiring": "company_owned_zero_extra_requests",
+    "synthesis": "template_no_llm",
+    "gallery": "smoke-test\\out2\\gallery.html",
+    "third_party_cost_usd": 0
+  }
+}

@@ -27,7 +27,15 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def fetch_json(url: str, *, timeout: float = 20.0, attempts: int = 3) -> FetchResult:
+def fetch_json(url: str, *, timeout: float = 20.0, attempts: int = 5) -> FetchResult:
+    """Fetch JSON with retries. 5xx (preview Regnskapsregisteret flakiness) gets longer backoff.
+
+    Security: allowlisted to official Brreg hosts only. The organisation number
+    is digits-validated upstream and URLs are built from hardcoded templates,
+    so an arbitrary-URL fetch can never be smuggled through this path.
+    """
+    if not url.startswith(("https://data.brreg.no/", "https://data.ppe.brreg.no/")):
+        return FetchResult(url, 0, 0, 0, error="blocked_non_allowlisted_host", retrieved_at=_utc_now())
     last_error = "request failed"
     for attempt in range(attempts):
         started = time.monotonic()
@@ -49,5 +57,6 @@ def fetch_json(url: str, *, timeout: float = 20.0, attempts: int = 3) -> FetchRe
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
             last_error = type(exc).__name__
         if attempt + 1 < attempts:
-            time.sleep(0.4 * (2**attempt))
+            # 0.8s, 1.6s, 3.2s, 6.4s — survives transient 503/500 bursts without hammering preview API
+            time.sleep(0.8 * (2**attempt))
     return FetchResult(url, 0, 0, 0, error=last_error, retrieved_at=_utc_now())

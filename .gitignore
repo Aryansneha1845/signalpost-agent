@@ -4,9 +4,15 @@ __pycache__/
 .venv/
 venv/
 out/
+smoke-test/out/
+smoke-test/out2/
+smoke-test/brreg-*.csv.gz
+smoke-test/mini-bulk.csv.gz
 brreg-*.csv
+brreg-*.csv.gz
 *.jsonl.gz
 signalpost-universe.jsonl.gz
 entry-companies.jsonl
+entry-100.jsonl
 smoke-companies.jsonl
 .DS_Store

@@ -34,6 +34,8 @@ PRIORITY_TERMS = (
     "om-oss", "om_oss", "about", "kontakt", "contact", "ledelse", "management",
     "team", "people", "locations", "lokasjoner", "avdelinger", "butikker",
     "news", "press", "aktuelt", "nyheter",
+    "career", "karriere", "job", "jobs", "stilling", "stillinger",
+    "ledig", "vacancy", "vacancies",
 )
 
 
@@ -42,6 +44,8 @@ def assert_public_url(url: str) -> None:
     host = (parsed.hostname or "").lower().rstrip(".")
     if parsed.scheme not in {"http", "https"} or not host:
         raise ValueError("Only public HTTP(S) URLs are allowed")
+    if parsed.username or parsed.password:
+        raise ValueError("URLs with credentials are blocked")
     if host == "localhost" or host.endswith(".localhost") or host.endswith(".local"):
         raise ValueError("Local hosts are blocked")
     try:

@@ -115,7 +115,11 @@ def _reserve_history_slot(clock: Callable[[], float] = time.monotonic, sleeper: 
 
 
 def _fetch_history(url: str) -> FetchResult:
-    """Keep this endpoint below its observed 30-request-starts/minute allowance."""
+    """Keep Regnskapsregisteret endpoints below observed allowance (preview, no QoS).
+
+    Both /regnskap/{org} and /aar return 503 under parallel burst; serialize
+    starts 2.1s apart. Enhetsregisteret endpoints use the default fetcher.
+    """
     _reserve_history_slot()
     return fetch_json(url)
 
@@ -192,7 +196,7 @@ def fetch_official_modules(org: str, modules: set[str], fetcher: Callable[[str],
     for module, (url, source_type) in endpoints.items():
         if module not in modules:
             continue
-        result = _fetch_history(url) if module == "financial_history" and fetcher is fetch_json else fetcher(url)
+        result = _fetch_history(url) if module in {"financials", "financial_history"} and fetcher is fetch_json else fetcher(url)
         metrics.append(result)
         normalized = None
         if result.status == 200:
