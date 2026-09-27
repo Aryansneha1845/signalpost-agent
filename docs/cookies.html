@@ -26,7 +26,11 @@ here and their own cookie policies apply after you leave.</p>
 (<code>scripts/build_prototype.py</code>) uses <code>localStorage</code> for a saved
 workspace. It is <strong>not</strong> part of the evaluated gallery, is never generated
 into these pages, and must gain its own consent flow before any hosted use.</p>
-<h2>5. Managing cookies generally</h2><p>Because nothing is set, there is nothing to
+<h2>5. Product demo (<code>/app</code>)</h2><p>The interactive demo is first-party
+JavaScript only: it fetches the bundled <code>companies.json</code> snapshot and keeps
+state in memory. It sets <strong>no cookies</strong>, uses <strong>no
+localStorage</strong>, and loads <strong>no analytics or third-party assets</strong>.</p>
+<h2>6. Managing cookies generally</h2><p>Because nothing is set, there is nothing to
 delete here. Browser controls remain available for other sites.</p></main>
 <footer><p>Signalpost — contact <a href="mailto:submit@builderr.ai">submit@builderr.ai</a>.
 No cookies, no analytics, no third-party embeds on these pages.</p></footer></body></html>
