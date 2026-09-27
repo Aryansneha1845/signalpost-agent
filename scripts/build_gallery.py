@@ -112,6 +112,7 @@ FOOTER = """<footer class='site'><div class='foot-inner'>
 <p>Verifiable Norwegian company facts from public registers (NLOD 2.0). Every claim links its source.
 Contact: <a href="mailto:{mail}">{mail}</a>. No accounts, no tracking, no sales.</p>
 <nav aria-label="Legal"><ul>
+<li><a href="app/">Product demo</a></li>
 <li><a href="console.html">Console</a></li>
 <li><a href="privacy.html">Privacy</a></li>
 <li><a href="terms.html">Terms</a></li>
