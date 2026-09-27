@@ -10,7 +10,7 @@ import argparse
 from datetime import date
 from pathlib import Path
 
-CONTACT_EMAIL = "submit@builderr.ai"
+CONTACT_EMAIL = "aryan0411singh@gmail.com"
 
 CSS = (
     "body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;margin:0;background:#fafafa;color:#1a1a1a;line-height:1.65}"
