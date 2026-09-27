@@ -283,7 +283,7 @@ function vRuns(filter){
 }
 function vSettings(){
  return `<h1 style="margin-bottom:2px">Settings</h1><p class="muted">Workspace preferences. Demo stores nothing — no cookies, no accounts.</p>
- <div class="card" style="margin-top:12px"><h3>Profile</h3><p>Aryan · Analyst</p><h3 style="margin-top:12px">Legal</h3><p><a href="../privacy.html">Privacy</a> · <a href="../terms.html">Terms</a> · <a href="../cookies.html">Cookies</a> · <a href="../refunds.html">Refunds</a> · <a href="../index.html">Verified gallery</a></p></div>`;
+ <div class="card" style="margin-top:12px"><h3>Profile</h3><p>Aryan · Analyst</p><h3 style="margin-top:12px">Legal</h3><p><a href="../privacy.html">Privacy</a> · <a href="../terms.html">Terms</a> · <a href="../cookies.html">Cookies</a> · <a href="../refunds.html">Refunds</a> · <a href="../gallery.html">Verified gallery</a></p></div>`;
 }
 /* ---------- palette ---------- */
 function openPalette(){

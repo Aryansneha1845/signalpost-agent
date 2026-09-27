@@ -33,7 +33,7 @@ SHELL = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <a class="skip" href="#main">Skip to content</a>
 <header class="site"><h1>{title}</h1><p>Signalpost · verified company intelligence</p></header>
 <div class="wrap"><nav aria-label="Legal"><ul>
-<li><a href="index.html">Gallery</a></li><li><a href="privacy.html">Privacy</a></li>
+<li><a href="index.html">Home</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="privacy.html">Privacy</a></li>
 <li><a href="terms.html">Terms</a></li><li><a href="cookies.html">Cookies</a></li>
 <li><a href="refunds.html">Refunds</a></li></ul></nav>
 <main id="main" class="sheet"><p><strong>Effective date:</strong> {day}</p>{body}</main>
