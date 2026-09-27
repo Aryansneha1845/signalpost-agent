@@ -23,7 +23,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from norway_company_agent.jobs import extract_jobs
+from norway_company_agent.reports import build_markdown
 from norway_company_agent.synthesis import build_synthesis
+from norway_company_agent.verification import verify_profile
 
 
 def _positive_int(value: str, *, minimum: int, maximum: int, name: str) -> int:
@@ -72,13 +74,19 @@ def main() -> None:
         print(proc.stderr[-3000:])
         raise SystemExit(proc.returncode)
 
-    # Layer 2: hiring + synthesis (no extra network).
+    # Layer 2: hiring + verification + synthesis (no extra network).
     profiles = [json.loads(line) for line in profiles_p.read_text(encoding="utf-8").splitlines() if line.strip()]
     if len(profiles) != args.expected_count:
         raise SystemExit(f"Refusing to continue: {len(profiles)} profiles != expected {args.expected_count}")
+    reports_dir = outdir / "reports"
+    reports_dir.mkdir(exist_ok=True)
     for p in profiles:
         p.setdefault("evidence", {})["hiring"] = extract_jobs(p)
+        p["verification"] = verify_profile(p)
         p["synthesis"] = build_synthesis(p)
+        p["report_markdown"] = build_markdown(p)
+        (reports_dir / f"{p['organisation_number']}.md").write_text(p["report_markdown"], encoding="utf-8")
+        p["report_path"] = f"reports/{p['organisation_number']}.md"
     profiles_p.write_text("".join(json.dumps(r, ensure_ascii=False, separators=(",", ":")) + "\n" for r in profiles), encoding="utf-8")
 
     envelopes = [json.loads(line) for line in envelopes_p.read_text(encoding="utf-8").splitlines() if line.strip()]

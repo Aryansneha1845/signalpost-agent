@@ -122,9 +122,17 @@ def card(env: dict, index: int) -> str:
         rt = html.escape(str(rec.get("retrieved_at") or ""))
         ev_rows += f"<tr><td>{html.escape(str(mod))}</td><td>{st}</td><td>{link}</td><td>{rt}</td></tr>"
     caption = f"Evidence for {name}, organisation {org}"
+    ver = prof.get("verification") if isinstance(prof.get("verification"), dict) else {}
+    conf = html.escape(str(ver.get("confidence", "?")))
+    conf_badge = f"<span class='b b-complete'>confidence {conf}</span>" if ver else ""
+    rep = prof.get("report_path") if isinstance(prof.get("report_path"), str) else ""
+    rep_link = ""
+    if rep and ".." not in rep and not rep.startswith(("/", "http:", "https:")):
+        rep_link = f"<p><a href='{html.escape(rep, quote=True)}'>Full report (Markdown)</a></p>"
     return (
         f"<article class='card' aria-labelledby='c{index}'>"
-        f"<h2 id='c{index}'>{name} <small>{org}</small></h2><div>{badges}</div><p>{summary}</p>"
+        f"<h2 id='c{index}'>{name} <small>{org}</small></h2><div>{badges}{conf_badge}</div><p>{summary}</p>"
+        f"{rep_link}"
         f"<table><caption class='skip'>{html.escape(caption)}</caption>"
         f"<tr><th scope='col'>Module</th><th scope='col'>State</th>"
         f"<th scope='col'>Source</th><th scope='col'>Retrieved</th></tr>{ev_rows}</table></article>"
@@ -166,6 +174,7 @@ FOOTER = """<footer><div class='foot-inner'><h2>Business details &amp; policies<
 (contact: <a href="mailto:{mail}">{mail}</a>). Company facts come from Norway's public registers
 under NLOD 2.0 — every claim carries its source link and retrieval date. No accounts, no tracking, no sales.</p>
 <nav aria-label="Legal"><ul>
+<li><a href="console.html">Console</a></li>
 <li><a href="privacy.html">Privacy Policy</a></li>
 <li><a href="terms.html">Terms &amp; Conditions</a></li>
 <li><a href="cookies.html">Cookie Policy</a></li>
