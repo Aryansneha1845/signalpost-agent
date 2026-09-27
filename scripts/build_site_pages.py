@@ -13,21 +13,16 @@ from pathlib import Path
 CONTACT_EMAIL = "submit@builderr.ai"
 
 CSS = (
-    "body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;margin:0;background:#eef2f7;color:#0f172a;line-height:1.6}"
-    ".wrap{max-width:780px;margin:0 auto;padding:0 16px 32px}"
-    ".hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#0ea5e9 135%);color:#fff;"
-    "padding:28px 24px;border-bottom:4px solid #f59e0b;box-shadow:0 6px 24px rgba(15,23,42,.35)}"
-    ".hero h1{margin:0;font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;text-shadow:0 3px 0 rgba(0,0,0,.35)}"
-    ".hero p{color:#dbeafe}"
-    ".sheet{background:#fff;border:1px solid #dbe3ef;border-radius:16px;padding:24px;margin-top:-8px;"
-    "box-shadow:0 1px 2px rgba(15,23,42,.12),0 8px 24px rgba(15,23,42,.14)}"
-    "a{color:#0b4cb3}a:focus-visible{outline:3px solid #0b4cb3;outline-offset:2px}"
-    "nav ul{list-style:none;padding:0;display:flex;gap:10px;flex-wrap:wrap}"
-    "nav a{display:inline-block;background:#fff;border:1px solid #dbe3ef;border-radius:999px;"
-    "padding:6px 14px;font-weight:700;text-decoration:none;box-shadow:0 2px 4px rgba(15,23,42,.15)}"
-    ".notice{background:#f1f5f9;border:1px solid #dbe3ef;border-left:6px solid #f59e0b;border-radius:8px;padding:12px}"
-    "footer{margin-top:32px;border-top:1px solid #dbe3ef;padding-top:16px;font-size:13px;color:#475569}"
-    ".skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;background:#fff;padding:8px;font-weight:700}"
+    "body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;margin:0;background:#fafafa;color:#1a1a1a;line-height:1.65}"
+    ".wrap{max-width:720px;margin:0 auto;padding:0 20px 40px}"
+    "header.site{max-width:720px;margin:0 auto;padding:40px 20px 4px}"
+    "header.site h1{margin:0;font-size:clamp(24px,4vw,32px);letter-spacing:-.02em}"
+    ".sheet{background:#fff;border:1px solid #e3e3e3;border-radius:10px;padding:24px;margin-top:16px}"
+    "a{color:#1a56db}a:focus-visible{outline:3px solid #1a56db;outline-offset:2px}"
+    "nav ul{list-style:none;padding:0;display:flex;gap:16px;flex-wrap:wrap}"
+    ".notice{background:#f4f6f9;border:1px solid #e3e3e3;border-left:4px solid #1a56db;border-radius:6px;padding:12px 14px}"
+    "footer{margin-top:32px;border-top:1px solid #e3e3e3;padding-top:16px;font-size:14px;color:#555}"
+    ".skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;background:#1a1a1a;color:#fff;padding:8px}"
 )
 
 SHELL = """<!doctype html><html lang="en"><head><meta charset="utf-8">
@@ -36,7 +31,7 @@ SHELL = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>{title} — Signalpost</title>
 <style>{css}</style></head><body>
 <a class="skip" href="#main">Skip to content</a>
-<div class="hero"><h1>{title}</h1><p>Signalpost · Brreg-verified company intelligence</p></div>
+<header class="site"><h1>{title}</h1><p>Signalpost · verified company intelligence</p></header>
 <div class="wrap"><nav aria-label="Legal"><ul>
 <li><a href="index.html">Gallery</a></li><li><a href="privacy.html">Privacy</a></li>
 <li><a href="terms.html">Terms</a></li><li><a href="cookies.html">Cookies</a></li>

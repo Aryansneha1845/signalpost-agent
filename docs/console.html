@@ -3,25 +3,26 @@
 <meta name="description" content="Signalpost interactive console: research any Norwegian company by organisation number.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; script-src 'none'; base-uri 'none'; form-action http://localhost:8000 https://localhost:8000">
 <title>Signalpost console — research any company</title>
-<style>body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;margin:0;background:#eef2f7;color:#0f172a}
-.hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#0ea5e9 135%);color:#fff;padding:36px 24px;border-bottom:4px solid #f59e0b}
-.hero h1{margin:0;font-size:clamp(28px,4vw,44px);text-shadow:0 3px 0 rgba(0,0,0,.35)}
-.hero p{color:#dbeafe}.wrap{max-width:640px;margin:0 auto;padding:24px 16px}
-.sheet{background:#fff;border:1px solid #dbe3ef;border-radius:16px;padding:24px;box-shadow:0 8px 24px rgba(15,23,42,.14)}
-label{font-weight:800;display:block;margin-bottom:6px}input{font:inherit;width:100%;padding:12px;border:2px solid #94a3b8;border-radius:10px}
-input:focus-visible{outline:3px solid #0b4cb3;outline-offset:2px}button{font:inherit;font-weight:800;margin-top:12px;background:#f59e0b;color:#111;border:0;border-radius:999px;padding:12px 28px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.35)}
-button:focus-visible{outline:3px solid #0b4cb3;outline-offset:2px}.notice{background:#f1f5f9;border-left:6px solid #f59e0b;border-radius:8px;padding:12px;margin-top:16px;font-size:14px}
-a{color:#0b4cb3}.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;background:#fff;padding:8px;font-weight:700}</style>
+<style>body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;margin:0;background:#fafafa;color:#1a1a1a;line-height:1.6}
+.wrap{max-width:560px;margin:0 auto;padding:48px 20px}
+h1{font-size:clamp(24px,4vw,32px);letter-spacing:-.02em;margin:0}
+.sub{color:#555}label{font-weight:700;display:block;margin:20px 0 6px}
+input{font:inherit;width:100%;padding:12px;border:1px solid #999;border-radius:8px;background:#fff}
+input:focus-visible{outline:3px solid #1a56db;outline-offset:2px}
+button{font:inherit;font-weight:700;margin-top:14px;background:#1a1a1a;color:#fff;border:0;border-radius:8px;padding:12px 28px;cursor:pointer}
+button:focus-visible{outline:3px solid #1a56db;outline-offset:2px}
+.notice{background:#fff;border:1px solid #e3e3e3;border-left:4px solid #1a56db;border-radius:6px;padding:12px 14px;margin-top:20px;font-size:14px;color:#333}
+a{color:#1a56db}.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;background:#1a1a1a;color:#fff;padding:8px}</style>
 </head><body><a class="skip" href="#main">Skip to research form</a>
-<div class="hero"><h1>Signalpost console</h1><p>Enter a company number → live research → verified report with evidence.</p></div>
-<div class="wrap"><main id="main" class="sheet">
+<div class="wrap"><main id="main">
+<h1>Research a company</h1>
+<p class="sub">Enter a Norwegian organisation number. Verified facts, sources, confidence.</p>
 <form action="http://localhost:8000/console-research" method="get">
 <label for="org">Company / Org No.</label>
 <input id="org" name="organisation_number" inputmode="numeric" autocomplete="off"
 placeholder="e.g. 923 609 016" pattern="[0-9 ]{9,12}" required>
 <button type="submit">Research</button></form>
-<div class="notice"><strong>Live research needs the local gateway.</strong> This static page posts to
-<code>http://localhost:8000</code> — run <code>pip install -r requirements-console.txt</code> then
-<code>uvicorn api.main:app --port 8000</code>. The precomputed <a href="index.html">gallery</a>
-shows 100 verified companies with no backend.</div>
+<div class="notice"><strong>Live research needs the local gateway:</strong>
+<code>pip install -r requirements-console.txt</code>, then <code>uvicorn api.main:app --port 8000</code>.
+Prefer browsing? See the precomputed <a href="index.html">gallery</a> — 100 verified companies, no backend needed.</div>
 </main></div></body></html>
